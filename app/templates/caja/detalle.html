@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Caja #{{ caja.id }}{% endblock %}
+{% block content %}
+<h3 class="mb-4"><i class="bi bi-cash-stack me-2"></i>Caja #{{ caja.id }}</h3>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card bg-light"><div class="card-body text-center">
+            <small class="text-muted">Inicio</small>
+            <h4>Gs. {{ "{:,.0f}".format(caja.monto_inicial) }}</h4>
+        </div></div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-light"><div class="card-body text-center">
+            <small class="text-muted">Ventas</small>
+            <h4 class="text-success">Gs. {{ "{:,.0f}".format(caja.total_ventas) }}</h4>
+        </div></div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-light"><div class="card-body text-center">
+            <small class="text-muted">Esperado</small>
+            <h4>Gs. {{ "{:,.0f}".format(caja.dinero_esperado) }}</h4>
+        </div></div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-light"><div class="card-body text-center">
+            <small class="text-muted">Diferencia</small>
+            <h4 class="{% if caja.diferencia < 0 %}text-danger{% elif caja.diferencia > 0 %}text-success{% endif %}">
+                Gs. {{ "{:,.0f}".format(caja.diferencia) }}
+            </h4>
+        </div></div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <p><strong>Apertura:</strong> {{ caja.fecha_apertura.strftime('%d/%m/%Y %H:%M') }} por {{ caja.usuario_apertura.nombre if caja.usuario_apertura else '' }}</p>
+        <p><strong>Cierre:</strong> {{ caja.fecha_cierre.strftime('%d/%m/%Y %H:%M') if caja.fecha_cierre else '-' }}</p>
+        <p><strong>Dinero contado:</strong> Gs. {{ "{:,.0f}".format(caja.dinero_contado) if caja.dinero_contado else '-' }}</p>
+        <p><strong>Estado:</strong> <span class="badge bg-{{ 'success' if caja.estado == 'Abierta' else 'secondary' }}">{{ caja.estado }}</span></p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Caja{% endblock %}
+{% block content %}
+<h3 class="mb-4"><i class="bi bi-cash-stack me-2"></i>Caja</h3>
+
+{% if caja_activa %}
+<div class="alert alert-success">
+    <i class="bi bi-check-circle me-1"></i> Caja abierta desde {{ caja_activa.fecha_apertura.strftime('%d/%m/%Y %H:%M') }} por {{ caja_activa.usuario_apertura.nombre if caja_activa.usuario_apertura else '' }}
+    <a href="{{ url_for('caja.cerrar') }}" class="btn btn-warning btn-sm ms-3"><i class="bi bi-lock"></i> Cerrar Caja</a>
+</div>
+{% else %}
+<div class="alert alert-secondary">
+    <i class="bi bi-x-circle me-1"></i> No hay caja abierta.
+    <a href="{{ url_for('caja.abrir') }}" class="btn btn-success btn-sm ms-3"><i class="bi bi-unlock"></i> Abrir Caja</a>
+</div>
+{% endif %}
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Apertura</th>
+                    <th>Cierre</th>
+                    <th>Inicial Gs.</th>
+                    <th>Ventas Gs.</th>
+                    <th>Esperado</th>
+                    <th>Contado</th>
+                    <th>Diferencia</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in cajas %}
+                <tr>
+                    <td>{{ c.id }}</td>
+                    <td>{{ c.fecha_apertura.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>{{ c.fecha_cierre.strftime('%d/%m/%Y %H:%M') if c.fecha_cierre else '-' }}</td>
+                    <td>{{ "{:,.0f}".format(c.monto_inicial) }}</td>
+                    <td>{{ "{:,.0f}".format(c.total_ventas) }}</td>
+                    <td>{{ "{:,.0f}".format(c.dinero_esperado) if c.dinero_esperado else '-' }}</td>
+                    <td>{{ "{:,.0f}".format(c.dinero_contado) if c.dinero_contado else '-' }}</td>
+                    <td class="fw-bold {% if c.diferencia and c.diferencia < 0 %}text-danger{% elif c.diferencia and c.diferencia > 0 %}text-success{% endif %}">
+                        {{ "{:,.0f}".format(c.diferencia) if c.diferencia is not none else '-' }}
+                    </td>
+                    <td>
+                        {% if c.estado == 'Abierta' %}
+                        <span class="badge bg-success">Abierta</span>
+                        {% else %}
+                        <span class="badge bg-secondary">Cerrada</span>
+                        {% endif %}
+                    </td>
+                    <td><a href="{{ url_for('caja.detalle', id=c.id) }}" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></a></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="10" class="text-center py-4 text-muted">No hay movimientos de caja.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

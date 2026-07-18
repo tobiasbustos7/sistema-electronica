@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Venta {{ venta.factura_numero }}{% endblock %}
+{% block content %}
+<h3 class="mb-4"><i class="bi bi-receipt me-2"></i>Venta {{ venta.factura_numero }}</h3>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <p><strong>Cliente:</strong> {{ venta.cliente.nombre_completo if venta.cliente else 'Consumidor Final' }}</p>
+                <p><strong>Usuario:</strong> {{ venta.usuario.nombre }}</p>
+                <p><strong>Fecha:</strong> {{ venta.fecha.strftime('%d/%m/%Y %H:%M') }}</p>
+                <p><strong>Método de pago:</strong> {{ venta.metodo_pago }}</p>
+                <p><strong>Estado:</strong>
+                    {% if venta.estado == 'Completada' %}
+                    <span class="badge bg-success">Completada</span>
+                    {% else %}
+                    <span class="badge bg-danger">Anulada</span>
+                    {% endif %}
+                </p>
+                <hr>
+                <p><strong>Subtotal:</strong> Gs. {{ "{:,.0f}".format(venta.subtotal) }}</p>
+                {% if venta.descuento > 0 %}
+                <p><strong>Descuento:</strong> -Gs. {{ "{:,.0f}".format(venta.descuento) }}</p>
+                {% endif %}
+                <h4 class="text-primary">Total: Gs. {{ "{:,.0f}".format(venta.total) }}</h4>
+                <p><strong>Recibido:</strong> Gs. {{ "{:,.0f}".format(venta.monto_efectivo + venta.monto_tarjeta + venta.monto_transferencia + venta.monto_qr) }}</p>
+                <p><strong>Vuelto:</strong> Gs. {{ "{:,.0f}".format(venta.vuelto) }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead class="table-light">
+                        <tr><th>Producto</th><th>Cantidad</th><th>Precio Unit.</th><th>Subtotal</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for d in venta.detalles %}
+                        <tr>
+                            <td>{{ d.producto.nombre }}<br><small>{{ d.producto.codigo }}</small></td>
+                            <td>{{ d.cantidad }}</td>
+                            <td>Gs. {{ "{:,.0f}".format(d.precio_unitario) }}</td>
+                            <td>Gs. {{ "{:,.0f}".format(d.subtotal) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

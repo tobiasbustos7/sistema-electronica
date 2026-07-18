@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Configuración{% endblock %}
+{% block content %}
+<h3 class="mb-4"><i class="bi bi-gear me-2"></i>Configuración del Negocio</h3>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="POST" enctype="multipart/form-data">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Nombre del Negocio</label>
+                    <input type="text" name="nombre_negocio" class="form-control" value="{{ configs.get('nombre_negocio', '') }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">RUC / ID</label>
+                    <input type="text" name="ruc_empresa" class="form-control" value="{{ configs.get('ruc_empresa', '') }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Dirección</label>
+                    <input type="text" name="direccion" class="form-control" value="{{ configs.get('direccion', '') }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Teléfono</label>
+                    <input type="text" name="telefono" class="form-control" value="{{ configs.get('telefono', '') }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Correo</label>
+                    <input type="email" name="correo" class="form-control" value="{{ configs.get('correo', '') }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">IVA (%)</label>
+                    <input type="number" name="iva" class="form-control" value="{{ configs.get('iva', '10') }}" step="0.01">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Moneda</label>
+                    <select name="moneda" class="form-select">
+                        <option value="Gs." {{ 'selected' if configs.get('moneda') == 'Gs.' else '' }}>Guaraníes (Gs.)</option>
+                        <option value="$" {{ 'selected' if configs.get('moneda') == '$' else '' }}>Dólares ($)</option>
+                        <option value="R$" {{ 'selected' if configs.get('moneda') == 'R$' else '' }}>Reales (R$)</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Logo</label>
+                    <input type="file" name="logo" class="form-control" accept="image/*">
+                    {% if configs.get('logo') %}
+                    <small class="text-muted">Logo actual: {{ configs.get('logo') }}</small>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Impresora (nombre)</label>
+                    <input type="text" name="impresora" class="form-control" value="{{ configs.get('impresora', '') }}">
+                </div>
+            </div>
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-save me-2"></i>Guardar Configuración</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

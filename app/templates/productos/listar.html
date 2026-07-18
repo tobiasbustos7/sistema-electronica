@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Productos{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <div class="flex items-center space-x-3">
+            <div class="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 text-xl shadow-sm">
+                <i class="fa-solid fa-box"></i>
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900">Productos</h2>
+                <p class="text-sm text-gray-500">Gestión de artículos del catálogo</p>
+            </div>
+        </div>
+    </div>
+    <div class="flex items-center space-x-2">
+        {% if current_user.es_admin() %}
+        <a href="{{ url_for('productos.categorias') }}" class="flex items-center space-x-1.5 bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm transition-all">
+            <i class="fa-solid fa-tags text-indigo-500"></i>
+            <span>Categorías</span>
+        </a>
+        <a href="{{ url_for('productos.marcas') }}" class="flex items-center space-x-1.5 bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm transition-all">
+            <i class="fa-solid fa-bookmark text-amber-500"></i>
+            <span>Marcas</span>
+        </a>
+        <a href="{{ url_for('productos.agregar') }}" class="flex items-center space-x-1.5 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-xl px-5 py-2.5 text-sm font-medium shadow-lg shadow-indigo-200 hover:shadow-indigo-300 transition-all">
+            <i class="fa-solid fa-plus"></i>
+            <span>Agregar</span>
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<form method="GET" class="flex items-center space-x-3 mb-6">
+    <div class="flex-1 relative">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400"><i class="fa-solid fa-search text-sm"></i></span>
+        <input type="text" name="q" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 outline-none transition-all text-sm" placeholder="Buscar por código, nombre o barras..." value="{{ request.args.get('q', '') }}">
+    </div>
+    <select name="categoria" class="py-2.5 px-4 rounded-xl border border-gray-200 focus:border-indigo-400 outline-none text-sm" onchange="this.form.submit()">
+        <option value="">Todas las categorías</option>
+        {% for c in categorias %}
+        <option value="{{ c.id }}" {% if request.args.get('categoria') == c.id|string %}selected{% endif %}>{{ c.nombre }}</option>
+        {% endfor %}
+    </select>
+    <select name="marca" class="py-2.5 px-4 rounded-xl border border-gray-200 focus:border-indigo-400 outline-none text-sm" onchange="this.form.submit()">
+        <option value="">Todas las marcas</option>
+        {% for m in marcas %}
+        <option value="{{ m.id }}" {% if request.args.get('marca') == m.id|string %}selected{% endif %}>{{ m.nombre }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="px-4 py-2.5 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-100 border border-indigo-200 transition-all text-sm font-medium">
+        <i class="fa-solid fa-filter"></i>
+    </button>
+</form>
+
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead>
+                <tr class="border-b border-gray-100">
+                    <th class="text-left px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Código</th>
+                    <th class="text-left px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Nombre</th>
+                    <th class="text-left px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Categoría</th>
+                    <th class="text-right px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">P. Compra</th>
+                    <th class="text-right px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">P. Venta</th>
+                    <th class="text-center px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Stock</th>
+                    <th class="text-center px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Estado</th>
+                    {% if current_user.es_admin() %}<th class="text-center px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Acciones</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                {% for p in productos %}
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-4 py-3 text-sm font-semibold text-gray-800">{{ p.codigo }}</td>
+                    <td class="px-4 py-3">
+                        <span class="text-sm font-medium text-gray-800">{{ p.nombre }}</span>
+                        {% if p.marca %}<br><span class="text-xs text-gray-400">{{ p.marca.nombre }}</span>{% endif %}
+                    </td>
+                    <td class="px-4 py-3 text-sm text-gray-600">{{ p.categoria.nombre if p.categoria else '-' }}</td>
+                    <td class="px-4 py-3 text-sm text-right text-gray-600">Gs. {{ "{:,.0f}".format(p.precio_compra) }}</td>
+                    <td class="px-4 py-3 text-sm text-right font-medium text-gray-800">Gs. {{ "{:,.0f}".format(p.precio_venta) }}</td>
+                    <td class="px-4 py-3 text-center">
+                        {% if p.stock <= 0 %}
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700">{{ p.stock }}</span>
+                        {% elif p.stock <= p.stock_minimo %}
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700">{{ p.stock }}</span>
+                        {% else %}
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700">{{ p.stock }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-3 text-center">
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold {{ 'bg-emerald-50 text-emerald-700' if p.estado == 'Disponible' else 'bg-gray-50 text-gray-500' }}">{{ p.estado }}</span>
+                    </td>
+                    {% if current_user.es_admin() %}
+                    <td class="px-4 py-3">
+                        <div class="flex items-center justify-center space-x-1.5">
+                            <a href="{{ url_for('productos.editar', id=p.id) }}" class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 flex items-center justify-center transition-all text-xs" title="Editar"><i class="fa-solid fa-pen"></i></a>
+                            <a href="{{ url_for('productos.duplicar', id=p.id) }}" class="w-8 h-8 rounded-lg bg-gray-50 text-gray-500 hover:bg-gray-100 flex items-center justify-center transition-all text-xs" title="Duplicar"><i class="fa-solid fa-copy"></i></a>
+                            <a href="{{ url_for('productos.eliminar', id=p.id) }}" class="w-8 h-8 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 flex items-center justify-center transition-all text-xs" onclick="return confirmarEliminar('¿Eliminar {{ p.nombre }}?')" title="Eliminar"><i class="fa-solid fa-trash-can"></i></a>
+                        </div>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% else %}
+                <tr><td colspan="{% if current_user.es_admin() %}8{% else %}7{% endif %}" class="text-center py-12 text-gray-400 text-sm">No hay productos registrados.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

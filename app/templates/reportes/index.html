@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Reportes{% endblock %}
+{% block content %}
+<h3 class="mb-4"><i class="bi bi-file-earmark-bar-graph me-2"></i>Reportes</h3>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-cart-check fs-1 text-primary"></i>
+                <h5 class="mt-2">Ventas</h5>
+                <p class="text-muted">Por día, semana, mes o año</p>
+                <a href="{{ url_for('reportes.ventas') }}" class="btn btn-primary w-100">Ver Reporte</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-box-seam fs-1 text-success"></i>
+                <h5 class="mt-2">Productos</h5>
+                <p class="text-muted">Más y menos vendidos</p>
+                <a href="{{ url_for('reportes.productos') }}" class="btn btn-success w-100">Ver Reporte</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-exclamation-triangle fs-1 text-warning"></i>
+                <h5 class="mt-2">Stock</h5>
+                <p class="text-muted">Productos con stock bajo o agotado</p>
+                <a href="{{ url_for('reportes.stock') }}" class="btn btn-warning w-100">Ver Reporte</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-cash-coin fs-1 text-info"></i>
+                <h5 class="mt-2">Ganancias</h5>
+                <p class="text-muted">Ganancias por período</p>
+                <a href="{{ url_for('reportes.ganancias') }}" class="btn btn-info w-100">Ver Reporte</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-filetype-pdf fs-1 text-danger"></i>
+                <h5 class="mt-2">Exportar PDF</h5>
+                <p class="text-muted">Reporte de ventas en PDF</p>
+                <a href="{{ url_for('reportes.pdf_ventas') }}" class="btn btn-danger w-100">Descargar PDF</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-file-earmark-excel fs-1 text-success"></i>
+                <h5 class="mt-2">Exportar Excel</h5>
+                <p class="text-muted">Reporte de ventas en Excel</p>
+                <a href="{{ url_for('reportes.excel_ventas') }}" class="btn btn-success w-100">Descargar Excel</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

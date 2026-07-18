@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}Nueva Compra{% endblock %}
+{% block content %}
+<h3 class="mb-4"><i class="bi bi-cart-plus me-2"></i>Nueva Compra</h3>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="POST" id="compraForm">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Proveedor *</label>
+                    <select name="proveedor_id" class="form-select" required>
+                        <option value="">Seleccionar proveedor</option>
+                        {% for p in proveedores %}
+                        <option value="{{ p.id }}">{{ p.nombre }} - {{ p.empresa or '' }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Observaciones</label>
+                    <input type="text" name="observaciones" class="form-control">
+                </div>
+            </div>
+
+            <h5 class="mb-3">Productos</h5>
+            <div class="mb-3">
+                <div class="input-group">
+                    <input type="text" id="buscarProducto" class="form-control" placeholder="Buscar producto...">
+                    <button type="button" class="btn btn-outline-secondary" onclick="agregarProductoLista()"><i class="bi bi-plus-lg"></i> Agregar</button>
+                </div>
+                <div id="productosDropdown" class="list-group position-absolute" style="z-index:1000;max-height:200px;overflow-y:auto;display:none;"></div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered" id="productosTable">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unit.</th>
+                            <th>Subtotal</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productosBody">
+                    </tbody>
+                    <tfoot>
+                        <tr class="table-secondary">
+                            <td colspan="3" class="text-end fw-bold">TOTAL:</td>
+                            <td id="totalCompra" class="fw-bold">Gs. 0</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-save me-2"></i>Guardar Compra</button>
+                <a href="{{ url_for('compras.listar') }}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+{% block extra_js %}
+<script>
+let productosAgregados = [];
+
+document.getElementById('buscarProducto').addEventListener('input', function() {
+    const q = this.value.trim();
+    if (q.length < 1) { document.getElementById('productosDropdown').style.display = 'none'; return; }
+    fetch('{{ url_for("compras.buscar_producto") }}?q=' + encodeURIComponent(q))
+        .then(r => r.json()).then(data => {
+        const dd = document.getElementById('productosDropdown');
+        dd.innerHTML = '';
+        data.forEach(p => {
+            const a = document.createElement('a');
+            a.className = 'list-group-item list-group-item-action';
+            a.textContent = `${p.codigo} - ${p.nombre} (Stock: ${p.stock})`;
+            a.onclick = function(e) { e.preventDefault(); agregarProducto(p); dd.style.display = 'none'; };
+            dd.appendChild(a);
+        });
+        dd.style.display = data.length ? 'block' : 'none';
+    });
+});
+
+function agregarProducto(p) {
+    if (productosAgregados.find(x => x.id === p.id)) { alert('Producto ya agregado.'); return; }
+    productosAgregados.push({ ...p, cantidad: 1, precio: p.precio_compra });
+    actualizarTabla();
+    document.getElementById('buscarProducto').value = '';
+}
+
+function agregarProductoLista() {
+    const input = document.getElementById('buscarProducto');
+    const dd = document.getElementById('productosDropdown');
+    if (dd.children.length > 0) dd.children[0].click();
+}
+
+function actualizarTabla() {
+    const tbody = document.getElementById('productosBody');
+    tbody.innerHTML = '';
+    let total = 0;
+    productosAgregados.forEach((p, i) => {
+        const st = p.cantidad * p.precio;
+        total += st;
+        tbody.innerHTML += `<tr>
+            <td>${p.nombre}<br><small>${p.codigo}</small></td>
+            <td><input type="hidden" name="producto_id[]" value="${p.id}"><input type="number" name="cantidad[]" class="form-control form-control-sm" style="width:80px" value="${p.cantidad}" min="1" onchange="cambiarCantidad(${i}, this.value)"></td>
+            <td><input type="number" name="precio_unitario[]" class="form-control form-control-sm" style="width:120px" value="${p.precio}" step="1" onchange="cambiarPrecio(${i}, this.value)"></td>
+            <td>Gs. ${formatNumber(Math.round(st))}</td>
+            <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="eliminarProducto(${i})"><i class="bi bi-x-lg"></i></button></td>
+        </tr>`;
+    });
+    document.getElementById('totalCompra').textContent = 'Gs. ' + formatNumber(Math.round(total));
+}
+
+function cambiarCantidad(i, val) {
+    productosAgregados[i].cantidad = parseInt(val) || 1;
+    actualizarTabla();
+}
+
+function cambiarPrecio(i, val) {
+    productosAgregados[i].precio = parseFloat(val) || 0;
+    actualizarTabla();
+}
+
+function eliminarProducto(i) {
+    productosAgregados.splice(i, 1);
+    actualizarTabla();
+}
+</script>
+{% endblock %}

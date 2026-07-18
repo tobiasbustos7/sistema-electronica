@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Reporte de Ventas{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0"><i class="bi bi-cart-check me-2"></i>Reporte de Ventas</h3>
+    <div>
+        <a href="{{ url_for('reportes.pdf_ventas') }}" class="btn btn-outline-danger btn-sm"><i class="bi bi-filetype-pdf"></i> PDF</a>
+        <a href="{{ url_for('reportes.excel_ventas') }}" class="btn btn-outline-success btn-sm"><i class="bi bi-file-earmark-excel"></i> Excel</a>
+    </div>
+</div>
+
+<div class="mb-3">
+    <a href="?periodo=hoy" class="btn btn-{{ 'primary' if periodo == 'hoy' else 'outline-primary' }} btn-sm">Hoy</a>
+    <a href="?periodo=semana" class="btn btn-{{ 'primary' if periodo == 'semana' else 'outline-primary' }} btn-sm">Semana</a>
+    <a href="?periodo=mes" class="btn btn-{{ 'primary' if periodo == 'mes' else 'outline-primary' }} btn-sm">Mes</a>
+    <a href="?periodo=anio" class="btn btn-{{ 'primary' if periodo == 'anio' else 'outline-primary' }} btn-sm">Año</a>
+</div>
+
+<div class="alert alert-info">Total: <strong>Gs. {{ "{:,.0f}".format(total) }}</strong></div>
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr><th>Factura</th><th>Cliente</th><th>Total</th><th>Método</th><th>Usuario</th><th>Fecha</th></tr>
+            </thead>
+            <tbody>
+                {% for v in ventas %}
+                <tr>
+                    <td>{{ v.factura_numero }}</td>
+                    <td>{{ v.cliente.nombre_completo if v.cliente else 'Consumidor Final' }}</td>
+                    <td>Gs. {{ "{:,.0f}".format(v.total) }}</td>
+                    <td>{{ v.metodo_pago }}</td>
+                    <td>{{ v.usuario.nombre }}</td>
+                    <td>{{ v.fecha.strftime('%d/%m/%Y %H:%M') }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" class="text-center text-muted py-3">Sin ventas en este período.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

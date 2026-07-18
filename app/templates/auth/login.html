@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Iniciar Sesión - Moviltec{% endblock %}
+{% block login_content %}
+<div class="min-h-screen flex" style="background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);">
+    <div class="m-auto w-full max-w-md px-6">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 border border-gray-100">
+            <div class="text-center mb-8">
+                <svg class="w-16 h-16 mx-auto text-indigo-500" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="25" y="10" width="50" height="80" rx="12" fill="#1e293b" stroke="#6366f1" stroke-width="4"/>
+                    <circle cx="50" cy="18" r="3" fill="#6366f1"/>
+                    <circle cx="42" cy="40" r="3" fill="#fff"/>
+                    <circle cx="58" cy="40" r="3" fill="#fff"/>
+                    <path d="M 43 55 Q 50 62 57 55" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none"/>
+                    <path d="M 15 25 L 20 20 M 80 25 L 85 20 M 15 70 L 20 75" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <h2 class="text-2xl font-bold text-gray-900 mt-4">Movil<span class="text-indigo-600">tec</span></h2>
+                <p class="text-sm text-gray-500 mt-1">Sistema de Gestión - Electrónica</p>
+            </div>
+            <form method="POST">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Usuario</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400"><i class="fa-solid fa-user"></i></span>
+                            <input type="text" name="username" class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 outline-none transition-all text-sm" placeholder="Ingresa tu usuario" required autofocus>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Contraseña</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400"><i class="fa-solid fa-lock"></i></span>
+                            <input type="password" name="password" class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 outline-none transition-all text-sm" placeholder="Ingresa tu contraseña" required>
+                        </div>
+                    </div>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div class="flex items-center space-x-2 px-4 py-3 rounded-xl mt-4 text-sm font-medium
+                    {% if category == 'success' %}bg-emerald-50 text-emerald-700 border border-emerald-200
+                    {% elif category == 'danger' %}bg-red-50 text-red-700 border border-red-200
+                    {% else %}bg-blue-50 text-blue-700 border border-blue-200{% endif %}">
+                    <i class="fa-solid fa-{% if category == 'success' %}check-circle{% elif category == 'danger' %}xmark-circle{% else %}info-circle{% endif %}"></i>
+                    <span>{{ message }}</span>
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+                <button type="submit" class="w-full mt-6 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white py-3 rounded-xl font-semibold text-sm hover:from-indigo-700 hover:to-indigo-800 transition-all shadow-lg shadow-indigo-200 hover:shadow-indigo-300">
+                    <i class="fa-solid fa-arrow-right-to-bracket mr-2"></i> Iniciar Sesión
+                </button>
+            </form>
+        </div>
+        <p class="text-center text-gray-500 text-xs mt-6">
+            &copy; 2025 Moviltec Reparaciones
+        </p>
+    </div>
+</div>
+{% endblock %}

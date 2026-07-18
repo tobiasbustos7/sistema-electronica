@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Inventario{% endblock %}
+{% block content %}
+<h3 class="mb-4"><i class="bi bi-clipboard-data me-2"></i>Inventario</h3>
+
+<form method="GET" class="row g-2 mb-3">
+    <div class="col-md-4">
+        <input type="text" name="q" class="form-control" placeholder="Buscar producto..." value="{{ request.args.get('q', '') }}">
+    </div>
+    <div class="col-md-3">
+        <select name="categoria" class="form-select" onchange="this.form.submit()">
+            <option value="">Todas las categorías</option>
+            {% for c in categorias %}
+            <option value="{{ c.id }}" {% if request.args.get('categoria') == c.id|string %}selected{% endif %}>{{ c.nombre }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select name="estado" class="form-select" onchange="this.form.submit()">
+            <option value="">Todos los estados</option>
+            <option value="con_stock" {% if request.args.get('estado') == 'con_stock' %}selected{% endif %}>Con stock (verde)</option>
+            <option value="poco_stock" {% if request.args.get('estado') == 'poco_stock' %}selected{% endif %}>Poco stock (amarillo)</option>
+            <option value="sin_stock" {% if request.args.get('estado') == 'sin_stock' %}selected{% endif %}>Sin stock (rojo)</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-primary w-100"><i class="bi bi-search"></i> Filtrar</button>
+    </div>
+</form>
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Código</th>
+                    <th>Producto</th>
+                    <th>Stock</th>
+                    <th>P. Compra</th>
+                    <th>P. Venta</th>
+                    <th>Ganancia</th>
+                    <th>Stock Mín.</th>
+                    <th>Ubicación</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in productos %}
+                <tr class="{% if p.stock <= 0 %}table-danger{% elif p.stock <= p.stock_minimo %}table-warning{% endif %}">
+                    <td class="fw-bold">{{ p.codigo }}</td>
+                    <td>{{ p.nombre }}</td>
+                    <td>
+                        <span class="{% if p.stock <= 0 %}stock-rojo{% elif p.stock <= p.stock_minimo %}stock-amarillo{% else %}stock-verde{% endif %} fs-5">
+                            {{ p.stock }}
+                        </span>
+                    </td>
+                    <td>Gs. {{ "{:,.0f}".format(p.precio_compra) }}</td>
+                    <td>Gs. {{ "{:,.0f}".format(p.precio_venta) }}</td>
+                    <td class="fw-bold text-success">Gs. {{ "{:,.0f}".format(p.ganancia) }}</td>
+                    <td>{{ p.stock_minimo }}</td>
+                    <td>{{ p.ubicacion or '-' }}</td>
+                    <td><span class="badge bg-{{ 'success' if p.estado == 'Disponible' else 'secondary' }}">{{ p.estado }}</span></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="9" class="text-center py-4 text-muted">No hay productos en el inventario.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

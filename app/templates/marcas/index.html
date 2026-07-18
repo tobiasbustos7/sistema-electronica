@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Marcas{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0"><i class="bi bi-bookmark me-2"></i>Marcas</h3>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5>Agregar Marca</h5>
+                <form method="POST" action="{{ url_for('productos.marcas_agregar') }}">
+                    <div class="mb-2">
+                        <input type="text" name="nombre" class="form-control" placeholder="Nombre de marca" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-plus-lg"></i> Agregar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr><th>Nombre</th><th>Productos</th><th>Acción</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for m in marcas %}
+                        <tr>
+                            <td>{{ m.nombre }}</td>
+                            <td>{{ m.productos|length }}</td>
+                            <td>
+                                <a href="{{ url_for('productos.marcas_eliminar', id=m.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirmarEliminar()"><i class="bi bi-trash"></i></a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="3" class="text-center text-muted py-3">No hay marcas.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

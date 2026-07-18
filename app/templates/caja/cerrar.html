@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Cerrar Caja{% endblock %}
+{% block content %}
+<h3 class="mb-4"><i class="bi bi-lock me-2"></i>Cerrar Caja</h3>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <small class="text-muted">Inicio</small>
+                        <h4>Gs. {{ "{:,.0f}".format(monto_inicial) }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <small class="text-muted">Ventas</small>
+                        <h4 class="text-success">Gs. {{ "{:,.0f}".format(total_ventas) }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <small class="text-muted">Gastos</small>
+                        <h4 class="text-danger">Gs. {{ "{:,.0f}".format(total_gastos) }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <small class="text-muted">Dinero Esperado</small>
+                        <h4>Gs. {{ "{:,.0f}".format(esperado) }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Dinero contado *</label>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text">Gs.</span>
+                    <input type="number" name="dinero_contado" class="form-control" required step="1" value="{{ esperado }}">
+                </div>
+                <small class="text-muted">Ingresa el dinero físico contado en caja.</small>
+            </div>
+            <button type="submit" class="btn btn-warning"><i class="bi bi-lock me-2"></i>Cerrar Caja</button>
+            <a href="{{ url_for('caja.index') }}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

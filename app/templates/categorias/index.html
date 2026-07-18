@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Categorías{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0"><i class="bi bi-tags me-2"></i>Categorías</h3>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5>Agregar Categoría</h5>
+                <form method="POST" action="{{ url_for('productos.categorias_agregar') }}">
+                    <div class="mb-2">
+                        <input type="text" name="nombre" class="form-control" placeholder="Nombre" required>
+                    </div>
+                    <div class="mb-2">
+                        <input type="text" name="descripcion" class="form-control" placeholder="Descripción (opcional)">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-plus-lg"></i> Agregar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr><th>Nombre</th><th>Descripción</th><th>Productos</th><th>Acción</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for c in categorias %}
+                        <tr>
+                            <td>{{ c.nombre }}</td>
+                            <td>{{ c.descripcion or '-' }}</td>
+                            <td>{{ c.productos|length }}</td>
+                            <td>
+                                <a href="{{ url_for('productos.categorias_eliminar', id=c.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirmarEliminar()"><i class="bi bi-trash"></i></a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="4" class="text-center text-muted py-3">No hay categorías.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

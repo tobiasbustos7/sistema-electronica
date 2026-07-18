@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Editar' if editando else 'Agregar' }} Producto{% endblock %}
+{% block content %}
+<h3 class="mb-4"><i class="bi bi-{{ 'pencil' if editando else 'plus-lg' }} me-2"></i>{{ 'Editar' if editando else 'Agregar' }} Producto</h3>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="POST" enctype="multipart/form-data">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Código</label>
+                    <input type="text" name="codigo" class="form-control" value="{{ producto.codigo if editando else '' }}">
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">Nombre *</label>
+                    <input type="text" name="nombre" class="form-control" required value="{{ producto.nombre if editando else '' }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Código de barras</label>
+                    <input type="text" name="codigo_barras" class="form-control" value="{{ producto.codigo_barras if editando else '' }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Categoría</label>
+                    <select name="categoria_id" class="form-select">
+                        <option value="">Seleccionar</option>
+                        {% for c in categorias %}
+                        <option value="{{ c.id }}" {% if editando and producto.categoria_id == c.id %}selected{% endif %}>{{ c.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Marca</label>
+                    <select name="marca_id" class="form-select">
+                        <option value="">Seleccionar</option>
+                        {% for m in marcas %}
+                        <option value="{{ m.id }}" {% if editando and producto.marca_id == m.id %}selected{% endif %}>{{ m.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Proveedor</label>
+                    <select name="proveedor_id" class="form-select">
+                        <option value="">Seleccionar</option>
+                        {% for p in proveedores %}
+                        <option value="{{ p.id }}" {% if editando and producto.proveedor_id == p.id %}selected{% endif %}>{{ p.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Precio Compra *</label>
+                    <input type="number" name="precio_compra" class="form-control" required step="1" value="{{ producto.precio_compra if editando else '0' }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Precio Venta *</label>
+                    <input type="number" name="precio_venta" class="form-control" required step="1" value="{{ producto.precio_venta if editando else '0' }}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Stock</label>
+                    <input type="number" name="stock" class="form-control" value="{{ producto.stock if editando else '0' }}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Stock mínimo</label>
+                    <input type="number" name="stock_minimo" class="form-control" value="{{ producto.stock_minimo if editando else '10' }}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Ubicación</label>
+                    <input type="text" name="ubicacion" class="form-control" value="{{ producto.ubicacion if editando else '' }}">
+                </div>
+                <div class="col-md-12">
+                    <label class="form-label">Descripción</label>
+                    <textarea name="descripcion" class="form-control" rows="2">{{ producto.descripcion if editando else '' }}</textarea>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Estado</label>
+                    <select name="estado" class="form-select">
+                        <option value="Disponible" {% if editando and producto.estado == 'Disponible' %}selected{% endif %}>Disponible</option>
+                        <option value="No disponible" {% if editando and producto.estado == 'No disponible' %}selected{% endif %}>No disponible</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Imagen</label>
+                    <input type="file" name="imagen" class="form-control" accept="image/*">
+                    {% if editando and producto.imagen %}
+                    <small class="text-muted">Imagen actual: {{ producto.imagen }}</small>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-save me-2"></i>Guardar</button>
+                <a href="{{ url_for('productos.listar') }}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

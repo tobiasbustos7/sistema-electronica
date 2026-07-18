@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}{{ cliente.nombre_completo }}{% endblock %}
+{% block content %}
+<h3 class="mb-4"><i class="bi bi-person me-2"></i>{{ cliente.nombre_completo }}</h3>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <p><strong>CI:</strong> {{ cliente.ci or '-' }}</p>
+                <p><strong>RUC:</strong> {{ cliente.ruc or '-' }}</p>
+                <p><strong>Teléfono:</strong> {{ cliente.telefono or '-' }}</p>
+                <p><strong>Correo:</strong> {{ cliente.correo or '-' }}</p>
+                <p><strong>Dirección:</strong> {{ cliente.direccion or '-' }}</p>
+                <hr>
+                <h5 class="text-success">Total Gastado: Gs. {{ "{:,.0f}".format(cliente.total_gastado) }}</h5>
+                <p><strong>Última compra:</strong> {{ cliente.ultima_compra.strftime('%d/%m/%Y') if cliente.ultima_compra else 'Nunca' }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header"><h5 class="mb-0">Historial de Compras</h5></div>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr><th>Factura</th><th>Total</th><th>Método</th><th>Fecha</th><th>Acción</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for v in ventas %}
+                        <tr>
+                            <td>{{ v.factura_numero }}</td>
+                            <td>Gs. {{ "{:,.0f}".format(v.total) }}</td>
+                            <td>{{ v.metodo_pago }}</td>
+                            <td>{{ v.fecha.strftime('%d/%m/%Y %H:%M') }}</td>
+                            <td><a href="{{ url_for('ventas.detalle', id=v.id) }}" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></a></td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="5" class="text-center text-muted py-3">Sin compras registradas.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

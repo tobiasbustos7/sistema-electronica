@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Moviltec - Sistema de Gestión{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 2px; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="flex h-screen overflow-hidden text-gray-800">
+
+    {% if current_user.is_authenticated %}
+    <aside class="w-64 flex flex-col justify-between shrink-0 text-gray-300" style="background: linear-gradient(180deg, #050515 0%, #0c0b31 100%);">
+        <div class="flex flex-col h-full overflow-y-auto sidebar-scroll">
+            <div class="p-6 flex flex-col items-center border-b border-gray-800/40">
+                <div class="flex flex-col items-center space-y-1">
+                    <svg class="w-12 h-12 text-blue-400" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="25" y="10" width="50" height="80" rx="12" fill="#1e293b" stroke="#3b82f6" stroke-width="4"/>
+                        <circle cx="50" cy="18" r="3" fill="#3b82f6"/>
+                        <circle cx="42" cy="40" r="3" fill="#fff"/>
+                        <circle cx="58" cy="40" r="3" fill="#fff"/>
+                        <path d="M 43 55 Q 50 62 57 55" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none"/>
+                        <path d="M 15 25 L 20 20 M 80 25 L 85 20 M 15 70 L 20 75" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                    <span class="text-2xl font-bold tracking-wide text-white mt-2">Movil<span class="text-blue-500">tec</span></span>
+                    <span class="text-xs uppercase tracking-widest text-gray-500 -mt-1">reparaciones</span>
+                </div>
+            </div>
+
+            <nav class="flex-1 px-4 py-6 space-y-1">
+                <a href="{{ url_for('dashboard.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl {% if request.endpoint and 'dashboard' in request.endpoint %}bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-medium shadow-lg shadow-indigo-900/30{% else %}text-gray-400 hover:text-white hover:bg-white/5{% endif %} transition-all">
+                    <i class="fa-solid fa-table-columns text-lg w-5 text-center"></i>
+                    <span class="text-sm">Dashboard</span>
+                </a>
+                <a href="{{ url_for('ventas.pos') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl {% if request.endpoint and 'ventas' in request.endpoint and 'pos' in request.endpoint %}bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-medium shadow-lg shadow-indigo-900/30{% else %}text-gray-400 hover:text-white hover:bg-white/5{% endif %} transition-all">
+                    <i class="fa-solid fa-cash-register w-5 text-center"></i>
+                    <span class="text-sm">Punto de Venta</span>
+                </a>
+                <a href="{{ url_for('productos.listar') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl {% if request.endpoint and 'productos' in request.endpoint %}bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-medium shadow-lg shadow-indigo-900/30{% else %}text-gray-400 hover:text-white hover:bg-white/5{% endif %} transition-all">
+                    <i class="fa-solid fa-box w-5 text-center"></i>
+                    <span class="text-sm">Productos</span>
+                </a>
+                <a href="{{ url_for('inventario.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl {% if request.endpoint and 'inventario' in request.endpoint %}bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-medium shadow-lg shadow-indigo-900/30{% else %}text-gray-400 hover:text-white hover:bg-white/5{% endif %} transition-all">
+                    <i class="fa-solid fa-warehouse w-5 text-center"></i>
+                    <span class="text-sm">Inventario</span>
+                </a>
+                <a href="{{ url_for('compras.listar') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl {% if request.endpoint and 'compras' in request.endpoint %}bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-medium shadow-lg shadow-indigo-900/30{% else %}text-gray-400 hover:text-white hover:bg-white/5{% endif %} transition-all">
+                    <i class="fa-solid fa-truck w-5 text-center"></i>
+                    <span class="text-sm">Compras</span>
+                </a>
+                <a href="{{ url_for('proveedores.listar') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl {% if request.endpoint and 'proveedores' in request.endpoint %}bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-medium shadow-lg shadow-indigo-900/30{% else %}text-gray-400 hover:text-white hover:bg-white/5{% endif %} transition-all">
+                    <i class="fa-solid fa-handshake w-5 text-center"></i>
+                    <span class="text-sm">Proveedores</span>
+                </a>
+                <a href="{{ url_for('caja.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl {% if request.endpoint and 'caja' in request.endpoint %}bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-medium shadow-lg shadow-indigo-900/30{% else %}text-gray-400 hover:text-white hover:bg-white/5{% endif %} transition-all">
+                    <i class="fa-solid fa-money-bill-wave w-5 text-center"></i>
+                    <span class="text-sm">Caja</span>
+                </a>
+                <a href="{{ url_for('ventas.clientes') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl {% if request.endpoint and 'clientes' in request.endpoint %}bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-medium shadow-lg shadow-indigo-900/30{% else %}text-gray-400 hover:text-white hover:bg-white/5{% endif %} transition-all">
+                    <i class="fa-solid fa-user-group w-5 text-center"></i>
+                    <span class="text-sm">Clientes</span>
+                </a>
+                {% if current_user.es_admin() %}
+                <div class="border-t border-gray-800/40 my-3 pt-3">
+                    <span class="px-4 text-[10px] uppercase tracking-widest text-gray-600 font-semibold">Administración</span>
+                </div>
+                <a href="{{ url_for('reportes.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl {% if request.endpoint and 'reportes' in request.endpoint %}bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-medium shadow-lg shadow-indigo-900/30{% else %}text-gray-400 hover:text-white hover:bg-white/5{% endif %} transition-all">
+                    <i class="fa-solid fa-chart-pie w-5 text-center"></i>
+                    <span class="text-sm">Reportes</span>
+                </a>
+                <a href="{{ url_for('usuarios.listar') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl {% if request.endpoint and 'usuarios' in request.endpoint %}bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-medium shadow-lg shadow-indigo-900/30{% else %}text-gray-400 hover:text-white hover:bg-white/5{% endif %} transition-all">
+                    <i class="fa-solid fa-users w-5 text-center"></i>
+                    <span class="text-sm">Usuarios</span>
+                </a>
+                <a href="{{ url_for('historia.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl {% if request.endpoint and 'historial' in request.endpoint %}bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-medium shadow-lg shadow-indigo-900/30{% else %}text-gray-400 hover:text-white hover:bg-white/5{% endif %} transition-all">
+                    <i class="fa-solid fa-clock-rotate-left w-5 text-center"></i>
+                    <span class="text-sm">Historial</span>
+                </a>
+                <a href="{{ url_for('configuracion.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl {% if request.endpoint and 'configuracion' in request.endpoint %}bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-medium shadow-lg shadow-indigo-900/30{% else %}text-gray-400 hover:text-white hover:bg-white/5{% endif %} transition-all">
+                    <i class="fa-solid fa-sliders w-5 text-center"></i>
+                    <span class="text-sm">Configuración</span>
+                </a>
+                {% endif %}
+            </nav>
+        </div>
+
+        <div class="p-6 border-t border-gray-800/40 flex items-center justify-center">
+            <svg class="w-full opacity-40 max-h-24" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="40" y="30" width="120" height="50" rx="4" fill="#312e81" stroke="#4f46e5" stroke-width="2"/>
+                <line x1="20" y1="80" x2="180" y2="80" stroke="#4f46e5" stroke-width="4" stroke-linecap="round"/>
+                <circle cx="30" cy="50" r="15" stroke="#3b82f6" stroke-width="3" fill="none"/>
+                <path d="M15 50 A 15 15 0 0 1 45 50" stroke="#3b82f6" stroke-width="3" fill="none"/>
+            </svg>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0">
+            <div class="flex items-center space-x-4">
+                <button class="text-gray-500 hover:text-gray-800 text-xl" id="menu-toggle">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <h1 class="text-lg font-semibold text-gray-800">Sistema de Gestión</h1>
+                {% if caja_abierta() %}
+                <span class="flex items-center space-x-1.5 bg-emerald-50 text-emerald-700 text-xs font-semibold px-3 py-1.5 rounded-full border border-emerald-200">
+                    <i class="fa-solid fa-circle text-[8px] text-emerald-500"></i>
+                    <span>Caja abierta</span>
+                </span>
+                {% endif %}
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 border border-indigo-100">
+                        <i class="fa-solid fa-user text-sm"></i>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700">{{ current_user.nombre }}</span>
+                    <span class="bg-indigo-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">{{ current_user.rol.nombre }}</span>
+                </div>
+                <div class="h-6 w-px bg-gray-200"></div>
+                <a href="{{ url_for('auth.logout') }}" class="flex items-center space-x-1.5 text-gray-500 hover:text-red-600 transition-all text-sm font-medium border border-gray-200 px-3 py-1.5 rounded-lg hover:border-red-100 hover:bg-red-50">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Salir</span>
+                </a>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-8 bg-[#f8fafc]">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="flex items-center space-x-2 px-4 py-3 rounded-xl mb-4 text-sm font-medium
+                {% if category == 'success' %}bg-emerald-50 text-emerald-700 border border-emerald-200
+                {% elif category == 'danger' %}bg-red-50 text-red-700 border border-red-200
+                {% elif category == 'warning' %}bg-amber-50 text-amber-700 border border-amber-200
+                {% else %}bg-blue-50 text-blue-700 border border-blue-200{% endif %}">
+                <i class="fa-solid fa-{% if category == 'success' %}check-circle{% elif category == 'danger' %}xmark-circle{% elif category == 'warning' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
+                <span>{{ message }}</span>
+                <button onclick="this.parentElement.remove()" class="ml-auto text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggle = document.getElementById('menu-toggle');
+            const sidebar = document.querySelector('aside');
+            if (toggle && sidebar) {
+                toggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('-translate-x-64');
+                    sidebar.classList.toggle('absolute');
+                    sidebar.classList.toggle('z-50');
+                    sidebar.classList.toggle('h-full');
+                });
+            }
+            setTimeout(function() {
+                document.querySelectorAll('[onclick*="remove()"]').forEach(function(el) {
+                    el.click();
+                });
+            }, 5000);
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+
+    {% else %}
+    {% block login_content %}{% endblock %}
+    {% endif %}
+
+</body>
+</html>

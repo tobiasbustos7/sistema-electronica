@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Compra #{{ compra.id }}{% endblock %}
+{% block content %}
+<h3 class="mb-4"><i class="bi bi-truck me-2"></i>Compra #{{ compra.id }}</h3>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <p><strong>Proveedor:</strong> {{ compra.proveedor.nombre }}</p>
+                <p><strong>Usuario:</strong> {{ compra.usuario.nombre }}</p>
+                <p><strong>Fecha:</strong> {{ compra.fecha.strftime('%d/%m/%Y %H:%M') }}</p>
+                <p><strong>Observaciones:</strong> {{ compra.observaciones or '-' }}</p>
+                <h4 class="text-primary">Total: Gs. {{ "{:,.0f}".format(compra.total) }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead class="table-light">
+                        <tr><th>Producto</th><th>Cantidad</th><th>Precio Unit.</th><th>Subtotal</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for d in compra.detalles %}
+                        <tr>
+                            <td>{{ d.producto.nombre }}<br><small>{{ d.producto.codigo }}</small></td>
+                            <td>{{ d.cantidad }}</td>
+                            <td>Gs. {{ "{:,.0f}".format(d.precio_unitario) }}</td>
+                            <td>Gs. {{ "{:,.0f}".format(d.subtotal) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

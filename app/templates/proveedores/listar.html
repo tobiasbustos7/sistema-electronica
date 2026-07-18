@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Proveedores{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0"><i class="bi bi-people me-2"></i>Proveedores</h3>
+    {% if current_user.es_admin() %}
+    <a href="{{ url_for('proveedores.agregar') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Agregar</a>
+    {% endif %}
+</div>
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Empresa</th>
+                    <th>RUC</th>
+                    <th>Teléfono</th>
+                    <th>Correo</th>
+                    <th>Ciudad</th>
+                    {% if current_user.es_admin() %}<th>Acciones</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in proveedores %}
+                <tr>
+                    <td class="fw-bold">{{ p.nombre }}</td>
+                    <td>{{ p.empresa or '-' }}</td>
+                    <td>{{ p.ruc or '-' }}</td>
+                    <td>{{ p.telefono or '-' }}</td>
+                    <td>{{ p.correo or '-' }}</td>
+                    <td>{{ p.ciudad or '-' }}</td>
+                    {% if current_user.es_admin() %}
+                    <td>
+                        <a href="{{ url_for('proveedores.editar', id=p.id) }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                        <a href="{{ url_for('proveedores.eliminar', id=p.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirmarEliminar()"><i class="bi bi-trash"></i></a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% else %}
+                <tr><td colspan="{% if current_user.es_admin() %}7{% else %}6{% endif %}" class="text-center py-4 text-muted">No hay proveedores.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
