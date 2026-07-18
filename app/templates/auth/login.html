@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Iniciar Sesión - Moviltec{% endblock %}
 {% block login_content %}
-<div class="h-screen overflow-hidden flex flex-col md:flex-row">
-    <div class="w-full md:w-1/2 h-full flex items-center justify-center px-6" style="background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);">
-        <div class="w-full max-w-md py-4">
+<div class="fixed inset-0 flex flex-col md:flex-row">
+    <div class="w-full md:w-1/2 flex items-center justify-center px-6 py-4 overflow-y-auto" style="background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);">
+        <div class="w-full max-w-md">
             <div class="bg-white rounded-3xl shadow-2xl p-8 border border-gray-100">
                 <div class="text-center mb-8">
                     <svg class="w-16 h-16 mx-auto text-indigo-500" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -54,11 +54,9 @@
                     </button>
                 </form>
             </div>
-            <p class="text-center text-gray-400 text-xs mt-6">
-                &copy; 2025 Moviltec Reparaciones
-            </p>
+            <p class="text-center text-gray-400 text-xs mt-6">&copy; 2025 Moviltec Reparaciones</p>
         </div>
     </div>
-    <div class="hidden md:block w-1/2 h-full bg-cover bg-center bg-no-repeat" style="background-image: url('{{ url_for('static', filename='img/bg-login.png') }}');"></div>
+    <div class="hidden md:block w-1/2 bg-cover bg-center bg-no-repeat" style="background-image: url('{{ url_for('static', filename='img/bg-login.png') }}');"></div>
 </div>
 {% endblock %}
