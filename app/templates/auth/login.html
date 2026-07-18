@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Iniciar Sesión - Moviltec{% endblock %}
 {% block login_content %}
-<div class="min-h-screen flex" style="background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);">
-    <div class="m-auto max-w-4xl w-full px-6">
-        <div class="flex bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
-            <div class="w-full md:w-1/2 p-8">
+<div class="min-h-screen flex">
+    <div class="w-full md:w-1/2 flex items-center justify-center px-6" style="background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);">
+        <div class="w-full max-w-md">
+            <div class="bg-white rounded-3xl shadow-2xl p-8 border border-gray-100">
                 <div class="text-center mb-8">
                     <svg class="w-16 h-16 mx-auto text-indigo-500" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="25" y="10" width="50" height="80" rx="12" fill="#1e293b" stroke="#6366f1" stroke-width="4"/>
@@ -51,14 +51,14 @@
 
                     <button type="submit" class="w-full mt-6 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white py-3 rounded-xl font-semibold text-sm hover:from-indigo-700 hover:to-indigo-800 transition-all shadow-lg shadow-indigo-200 hover:shadow-indigo-300">
                         <i class="fa-solid fa-arrow-right-to-bracket mr-2"></i> Iniciar Sesión
-                </button>
-            </form>
+                    </button>
+                </form>
             </div>
-            <div class="hidden md:block w-1/2 bg-cover bg-center" style="background-image: url('{{ url_for('static', filename='img/bg-login.png') }}');"></div>
+            <p class="text-center text-gray-400 text-xs mt-6">
+                &copy; 2025 Moviltec Reparaciones
+            </p>
         </div>
-        <p class="text-center text-gray-500 text-xs mt-6">
-            &copy; 2025 Moviltec Reparaciones
-        </p>
     </div>
+    <div class="hidden md:block w-1/2 bg-cover bg-center" style="background-image: url('{{ url_for('static', filename='img/bg-login.png') }}');"></div>
 </div>
 {% endblock %}
