@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Iniciar Sesión - Moviltec{% endblock %}
 {% block login_content %}
-<div class="fixed inset-0 flex flex-col md:flex-row">
+<div class="fixed inset-0 flex flex-col md:flex-row" style="background: url('{{ url_for('static', filename='img/bg-login.png') }}') center / cover no-repeat;">
     <div class="w-full md:w-1/2 flex items-center justify-center px-6 py-4 overflow-y-auto" style="background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);">
         <div class="w-full max-w-md">
             <div class="bg-white rounded-3xl shadow-2xl p-8 border border-gray-100">
@@ -57,6 +57,6 @@
             <p class="text-center text-gray-400 text-xs mt-6">&copy; 2025 Moviltec Reparaciones</p>
         </div>
     </div>
-    <div class="hidden md:block w-1/2 bg-cover bg-no-repeat" style="background-image: url('{{ url_for('static', filename='img/bg-login.png') }}'); background-position: 70% center;"></div>
+    <div class="hidden md:block w-1/2"></div>
 </div>
 {% endblock %}
